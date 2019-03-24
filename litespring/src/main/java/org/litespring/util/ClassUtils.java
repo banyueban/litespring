@@ -1,5 +1,9 @@
 package org.litespring.util;
 
+/**
+ * @author Charis
+ * this util copied from spring
+ */
 public class ClassUtils {
 
 	public static ClassLoader getDefaultClassLoader() {
