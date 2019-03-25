@@ -12,8 +12,14 @@ import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.factory.BeanDefinitionStoreException;
 import org.litespring.beans.factory.support.BeanDefinitionRegistry;
 import org.litespring.beans.factory.support.GenericBeanDefinition;
+import org.litespring.core.io.Resource;
 import org.litespring.util.ClassUtils;
 
+/**
+ * @author MAQUN
+ * 加载bean的定义,由原始的DefaultBeanFactory抽取而来
+ *
+ */
 public class XmlBeanDefinitionReader {
 
 	public static final String ID_ATTRIBUTE = "id";
@@ -26,11 +32,13 @@ public class XmlBeanDefinitionReader {
 		this.registry = registry;
 	}
 	
-	public void loadBeanDefinitions(String configFile) {
+	public void loadBeanDefinitions(Resource resource) {
 		InputStream is = null;
 		try {
-			ClassLoader cl = ClassUtils.getDefaultClassLoader();
-			is = cl.getResourceAsStream(configFile);
+			// 定义了resource的不同实现来读取配置文件
+//			ClassLoader cl = ClassUtils.getDefaultClassLoader();
+//			is = cl.getResourceAsStream(configFile);
+			is = resource.getInputStream();
 			SAXReader reader = new SAXReader();
 			Document doc = reader.read(is);
 			Element root = doc.getRootElement(); // <beans>
@@ -43,8 +51,8 @@ public class XmlBeanDefinitionReader {
 				this.registry.registerBeanDefinition(id, beanDefinition);
 				
 			}
-		} catch(DocumentException e) {
-			throw new BeanDefinitionStoreException("IOException parsing XML " + configFile, e);
+		} catch(Exception e) {
+			throw new BeanDefinitionStoreException("IOException parsing XML document from " + resource.getDescription(), e);
 		} finally {
 			if (null != is) {
 				try {

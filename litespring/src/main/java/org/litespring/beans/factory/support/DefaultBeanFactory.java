@@ -64,11 +64,12 @@ public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry {
 		}
 	}
 	*/
-
+	@Override
 	public BeanDefinition getBeanDefinition(String beanID) {
 		return this.beanDefinitionMap.get(beanID);
 	}
-
+	
+	@Override
 	public Object getBean(String beanID) {
 		BeanDefinition bd = this.getBeanDefinition(beanID);
 		if (null == bd) {
@@ -84,7 +85,7 @@ public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry {
 			throw new BeanCreationException("create bean for " + beanClassName +" fail");
 		}
 	}
-
+	@Override
 	public void registerBeanDefinition(String beanID, BeanDefinition beanDefinition) {
 		this.beanDefinitionMap.put(beanID, beanDefinition);
 	}
