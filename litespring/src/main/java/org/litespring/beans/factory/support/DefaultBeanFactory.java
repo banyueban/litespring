@@ -1,22 +1,22 @@
 package org.litespring.beans.factory.support;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
+//import java.io.IOException;
+//import java.io.InputStream;
+//import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+//import org.dom4j.Document;
+//import org.dom4j.DocumentException;
+//import org.dom4j.Element;
+//import org.dom4j.io.SAXReader;
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.factory.BeanCreationException;
-import org.litespring.beans.factory.BeanDefinitionStoreException;
+//import org.litespring.beans.factory.BeanDefinitionStoreException;
 import org.litespring.beans.factory.BeanFactory;
 import org.litespring.util.ClassUtils;
 
-public class DefaultBeanFactory implements BeanFactory {
+public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry {
 	
 	public static final String ID_ATTRIBUTE = "id";
 	
@@ -24,11 +24,17 @@ public class DefaultBeanFactory implements BeanFactory {
 	
 	private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
 	
-	public DefaultBeanFactory(String configFile) {
-		loadBeanDefinition(configFile);
-	}
+	/*public DefaultBeanFactory(String configFile) {
+		loadBeanDefinitions(configFile);
+	}*/
 
-	private void loadBeanDefinition(String configFile) {
+	public DefaultBeanFactory() {
+		
+	}
+	
+	// 由于单一职责原则,方法由BeanDefinitionRegistry实现
+	/*
+	private void loadBeanDefinitions(String configFile) {
 		InputStream is = null;
 		try {
 			ClassLoader cl = ClassUtils.getDefaultClassLoader();
@@ -42,7 +48,8 @@ public class DefaultBeanFactory implements BeanFactory {
 				String id = ele.attributeValue(ID_ATTRIBUTE);
 				String beanClassName = ele.attributeValue(CLASS_ATTRIBUTE);
 				BeanDefinition beanDefinition = new GenericBeanDefinition(id, beanClassName);
-				beanDefinitionMap.put(id, beanDefinition);
+				this.beanDefinitionMap.put(beanID, beanDefinition);
+				
 			}
 		} catch(DocumentException e) {
 			throw new BeanDefinitionStoreException("IOException parsing XML " + configFile, e);
@@ -56,6 +63,7 @@ public class DefaultBeanFactory implements BeanFactory {
 			}
 		}
 	}
+	*/
 
 	public BeanDefinition getBeanDefinition(String beanID) {
 		return this.beanDefinitionMap.get(beanID);
@@ -75,6 +83,10 @@ public class DefaultBeanFactory implements BeanFactory {
 		} catch (Exception e) {
 			throw new BeanCreationException("create bean for " + beanClassName +" fail");
 		}
+	}
+
+	public void registerBeanDefinition(String beanID, BeanDefinition beanDefinition) {
+		this.beanDefinitionMap.put(beanID, beanDefinition);
 	}
 
 }

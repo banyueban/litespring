@@ -1,11 +1,9 @@
 package org.litespring.beans.factory;
 
-import org.litespring.beans.BeanDefinition;
-
-
 public interface BeanFactory {
 
-	BeanDefinition getBeanDefinition(String beanID);
+	// 将次方法抽离到BeanDefinitionRegistry接口
+//	BeanDefinition getBeanDefinition(String beanID);
 
 	Object getBean(String beanID);
 
