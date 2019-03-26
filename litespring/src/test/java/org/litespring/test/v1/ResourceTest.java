@@ -1,7 +1,5 @@
 package org.litespring.test.v1;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -36,7 +34,7 @@ public class ResourceTest {
 	
 	@Test
 	public void testFileSystemResource() {
-		Resource r = new FileSystemResource("D:\\dev\\git\\litespring\\src\\test\\resources\\petstore-v1.xml");
+		Resource r = new FileSystemResource("D:\\git\\litespring\\litespring\\src\\test\\resources\\petstore-v1.xml");
 		InputStream is = null;
 		try {
 			is = r.getInputStream();
