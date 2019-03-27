@@ -19,7 +19,7 @@ public class ApplicationContextTest {
 	@Test
 	public void testGetBeanFromFileSystemClassPath() {
 		// 如何解决绝对路径hardcode的问题
-		ApplicationContext ctx = new FileSystemXmlApplicationContext("D:\\git\\litespring\\litespring\\src\\test\\resources\\petstore-v1.xml");
+		ApplicationContext ctx = new FileSystemXmlApplicationContext("D:\\dev\\git\\litespring\\src\\test\\resources\\petstore-v1.xml");
 		PetStoreService petStore = (PetStoreService) ctx.getBean("petStore");
 		assertNotNull(petStore);
 	}

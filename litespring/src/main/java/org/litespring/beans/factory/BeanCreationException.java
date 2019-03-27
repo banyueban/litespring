@@ -2,6 +2,10 @@ package org.litespring.beans.factory;
 
 import org.litespring.beans.BeansException;
 
+/**
+ * @author MAQUN
+ * 创建bean的异常
+ */
 public class BeanCreationException extends BeansException {
 	
 	private String beanName;
