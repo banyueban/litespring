@@ -1,4 +1,7 @@
 package org.litespring.beans;
+
+import java.util.List;
+
 /**
  * @author MAQUN
  * @version V1.0 
@@ -20,4 +23,6 @@ public interface BeanDefinition {
 	
 	// case0只有getBeanClassName一个方法
 	public String getBeanClassName();
+	
+	List<PropertyValue> getPropertyValues();
 }
