@@ -35,7 +35,7 @@ public class BeanDefinitionTestV2 {
 			assertTrue(pv.getValue() instanceof RuntimeBeanReference);
 		}
 		{
-			PropertyValue pv = this.getPropertyValue("env", pvs);
+			PropertyValue pv = this.getPropertyValue("ower", pvs);
 			assertNotNull(pv);
 			assertTrue(pv.getValue() instanceof TypedStringValue);
 		}

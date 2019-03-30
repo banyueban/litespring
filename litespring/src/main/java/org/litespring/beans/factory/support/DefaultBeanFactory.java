@@ -1,5 +1,9 @@
 package org.litespring.beans.factory.support;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.util.List;
 //import java.io.IOException;
 //import java.io.InputStream;
 //import java.util.Iterator;
@@ -11,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 //import org.dom4j.Element;
 //import org.dom4j.io.SAXReader;
 import org.litespring.beans.BeanDefinition;
+import org.litespring.beans.PropertyValue;
 import org.litespring.beans.factory.BeanCreationException;
 //import org.litespring.beans.factory.BeanDefinitionStoreException;
 //import org.litespring.beans.factory.BeanFactory;
@@ -88,12 +93,28 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 		}
 		return createBean(bd);
 	}
+	
+	/**
+	 * @param bd
+	 * @return
+	 * 重构getbean方法,实现setter注入
+	 */
+	private Object createBean(BeanDefinition bd) {
+		// 实例化bean
+		Object bean = instantiateBean(bd);
+		// 初始化bean
+		populateBean(bd, bean);
+		
+		return bean;
+	}
+	
 	/**
 	 * @User: MAQUN
 	 * @Date: 2019-03-26 16:03:15
 	 * 对生成bean的方法做封装,用于处理singleton和prototype
+	 * 初实例化bean
 	 */
-	private Object createBean(BeanDefinition bd) {
+	private Object instantiateBean(BeanDefinition bd) {
 		ClassLoader cl = this.getBeanClassLoader();
 		String beanClassName = bd.getBeanClassName();
 		try {
@@ -101,6 +122,36 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 			return clazz.newInstance();
 		} catch (Exception e) {
 			throw new BeanCreationException("create bean for " + beanClassName +" fail");
+		}
+	}
+	/**
+	 * @param bd
+	 * @param bean
+	 * 初始化bean,实现setter注入
+	 */
+	protected void populateBean(BeanDefinition bd, Object bean) {
+		List<PropertyValue> pvs = bd.getPropertyValues();
+		if (null == pvs || pvs.isEmpty()) {
+			return;
+		}
+		BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this);
+		try {
+			for (PropertyValue pv : pvs) {
+				String propertyName = pv.getName();
+				Object originalValue = pv.getValue();
+				Object resolvedValue = valueResolver.resolveValueIfNecessary(originalValue);
+				//java.bean包下的方法,实现setter注入
+				BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+				PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+				for (PropertyDescriptor pd : pds) {
+					if (pd.getName().equals(propertyName)) {
+						pd.getWriteMethod().invoke(bean, resolvedValue);
+						break;
+					}
+				}
+			}
+		} catch(Exception ex) {
+			throw new BeanCreationException("Failed to obtain BeanInfo for class [" + bd.getBeanClassName() + "]", ex);
 		}
 	}
 	

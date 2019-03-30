@@ -9,7 +9,7 @@ public class PetStoreService {
 	
 	private ItemDao itemDao;
 	
-	private String env;
+	private String ower;
 
 	public AccountDao getAccountDao() {
 		return accountDao;
@@ -27,14 +27,12 @@ public class PetStoreService {
 		this.itemDao = itemDao;
 	}
 
-	public String getEnv() {
-		return env;
+	public String getOwer() {
+		return ower;
 	}
 
-	public void setEnv(String env) {
-		this.env = env;
+	public void setOwer(String ower) {
+		this.ower = ower;
 	}
-	
-	
 	
 }
