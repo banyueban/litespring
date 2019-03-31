@@ -10,6 +10,8 @@ public class PetStoreService {
 	private ItemDao itemDao;
 	
 	private String ower;
+	
+	private int version;
 
 	public AccountDao getAccountDao() {
 		return accountDao;
@@ -33,6 +35,14 @@ public class PetStoreService {
 
 	public void setOwer(String ower) {
 		this.ower = ower;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 	
 }

@@ -20,5 +20,6 @@ public class ApplicationContextTestV2 {
 		assertTrue(ps.getAccountDao() instanceof AccountDao);
 		assertTrue(ps.getItemDao() instanceof ItemDao);
 		assertEquals("maqun", ps.getOwer());
+		assertEquals(2, ps.getVersion());
 	}
 }

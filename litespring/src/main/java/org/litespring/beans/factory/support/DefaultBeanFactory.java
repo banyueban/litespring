@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 //import org.dom4j.io.SAXReader;
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
+import org.litespring.beans.SimpleTypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
 //import org.litespring.beans.factory.BeanDefinitionStoreException;
 //import org.litespring.beans.factory.BeanFactory;
@@ -135,6 +136,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 			return;
 		}
 		BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this);
+		SimpleTypeConverter converter = new SimpleTypeConverter();
 		try {
 			for (PropertyValue pv : pvs) {
 				String propertyName = pv.getName();
@@ -145,7 +147,10 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 				PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
 				for (PropertyDescriptor pd : pds) {
 					if (pd.getName().equals(propertyName)) {
-						pd.getWriteMethod().invoke(bean, resolvedValue);
+						Object convertedValue = converter.convertIfNecessary(resolvedValue, pd.getPropertyType());
+						// 增加了对string转int的转换器
+//						pd.getWriteMethod().invoke(bean, resolvedValue);
+						pd.getWriteMethod().invoke(bean, convertedValue);
 						break;
 					}
 				}

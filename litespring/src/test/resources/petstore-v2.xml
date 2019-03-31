@@ -8,6 +8,7 @@
   	<property name="accountDao" ref="accountDao"></property>
   	<property name="itemDao" ref="itemDao"></property>
   	<property name="ower" value="maqun"></property>
+  	<property name="version" value="2"></property>
   </bean> 
   
   <bean id="accountDao" class="org.litespring.dao.v2.AccountDao"></bean> 

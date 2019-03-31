@@ -23,7 +23,7 @@ public class BeanDefinitionTestV2 {
 		reader.loadBeanDefinitions(new ClassPathResource("petstore-v2.xml"));
 		BeanDefinition bd = factory.getBeanDefinition("petStore");
 		List<PropertyValue> pvs = bd.getPropertyValues();
-		assertTrue(pvs.size()== 3);
+		assertTrue(pvs.size()== 4);
 		{
 			PropertyValue pv = this.getPropertyValue("accountDao", pvs);
 			assertNotNull(pv);
