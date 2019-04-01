@@ -2,6 +2,8 @@ package org.litespring.beans;
 
 import java.util.List;
 
+import org.litespring.test.v3.ConstructorArgument;
+
 /**
  * @author MAQUN
  * @version V1.0 
@@ -25,4 +27,6 @@ public interface BeanDefinition {
 	public String getBeanClassName();
 	
 	List<PropertyValue> getPropertyValues();
+
+	public ConstructorArgument getConstructorArgument();
 }
