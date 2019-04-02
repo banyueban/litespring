@@ -10,6 +10,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.litespring.beans.BeanDefinition;
+import org.litespring.beans.ConstructorArgument;
 import org.litespring.beans.PropertyValue;
 import org.litespring.beans.factory.BeanDefinitionStoreException;
 import org.litespring.beans.factory.config.RuntimeBeanReference;
@@ -39,6 +40,10 @@ public class XmlBeanDefinitionReader {
 	public static final String VALUE_ATTRIBUTE = "value";
 	
 	public static final String REF_ATTRIBUTE = "ref";
+	
+	public static final String CONSTRUCTOR_ARG_ELEMENT = "constructor-arg";
+	
+	public static final String TYPE_ATTRIBUTE = "type";
 	
 	private BeanDefinitionRegistry registry;
 	
@@ -72,6 +77,7 @@ public class XmlBeanDefinitionReader {
 				if (null != ele.attribute(SCOPE_ATTRIBUTE)) {
 					bd.setScope(ele.attributeValue(SCOPE_ATTRIBUTE));
 				}
+				parseConstructorArgElements(ele, bd);
 				parsePropertyElement(ele, bd);
 				this.registry.registerBeanDefinition(id, bd);
 			}
@@ -87,6 +93,28 @@ public class XmlBeanDefinitionReader {
 			}
 		}
 	}
+	private void parseConstructorArgElements(Element beanElement, BeanDefinition bd) {
+		Iterator iter = beanElement.elementIterator(CONSTRUCTOR_ARG_ELEMENT);
+		while(iter.hasNext()) {
+			Element ele = (Element) iter.next();
+			parseConstrucotrArgElement(ele, bd);
+		}
+	}
+
+	private void parseConstrucotrArgElement(Element ele, BeanDefinition bd) {
+		String typeAttr = ele.attributeValue(TYPE_ATTRIBUTE);
+		String nameAttr = ele.attributeValue(NAME_ATTRIBUTE);
+		Object val = this.parsePropertyValue(ele, bd, null);
+		ConstructorArgument.ValueHolder valueHolder = new ConstructorArgument.ValueHolder(val);
+		if (StringUtils.hasText(typeAttr)) {
+			valueHolder.setType(typeAttr);
+		}
+		if (StringUtils.hasText(nameAttr)) {
+			valueHolder.setName(nameAttr);
+		}
+		bd.getConstructorArgument().addArgumetValue(valueHolder);
+	}
+
 	/**
 	 * @User: MAQUN
 	 * @Date: 2019-03-28 17:12:41
