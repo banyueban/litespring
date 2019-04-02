@@ -3,7 +3,12 @@ package org.litespring.beans;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
+/**
+ * @author MAQUN
+ * @version V1.0 
+ * @Date 2019-04-02 13:40:16
+ * 封装处理xml中<constructor-arg>标签
+ */
 public class ConstructorArgument {
 	
 	private final List<ValueHolder> argumentValues = new LinkedList<ValueHolder>();
@@ -14,7 +19,7 @@ public class ConstructorArgument {
 		return Collections.unmodifiableList(this.argumentValues);
 	}
 	
-	public void addArgumetValue(ValueHolder value) {
+	public void addArgumentValue(ValueHolder value) {
 		this.argumentValues.add(value);
 	}
 	

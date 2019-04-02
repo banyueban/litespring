@@ -77,7 +77,9 @@ public class XmlBeanDefinitionReader {
 				if (null != ele.attribute(SCOPE_ATTRIBUTE)) {
 					bd.setScope(ele.attributeValue(SCOPE_ATTRIBUTE));
 				}
+				// v3加入了构造器注入的解析,解析<constructor-arg>
 				parseConstructorArgElements(ele, bd);
+				// v2加入了setter注入的解析,解析<property>
 				parsePropertyElement(ele, bd);
 				this.registry.registerBeanDefinition(id, bd);
 			}
@@ -93,7 +95,7 @@ public class XmlBeanDefinitionReader {
 			}
 		}
 	}
-	private void parseConstructorArgElements(Element beanElement, BeanDefinition bd) {
+	public void parseConstructorArgElements(Element beanElement, BeanDefinition bd) {
 		Iterator iter = beanElement.elementIterator(CONSTRUCTOR_ARG_ELEMENT);
 		while(iter.hasNext()) {
 			Element ele = (Element) iter.next();
@@ -101,7 +103,7 @@ public class XmlBeanDefinitionReader {
 		}
 	}
 
-	private void parseConstrucotrArgElement(Element ele, BeanDefinition bd) {
+	public void parseConstrucotrArgElement(Element ele, BeanDefinition bd) {
 		String typeAttr = ele.attributeValue(TYPE_ATTRIBUTE);
 		String nameAttr = ele.attributeValue(NAME_ATTRIBUTE);
 		Object val = this.parsePropertyValue(ele, bd, null);
@@ -112,7 +114,7 @@ public class XmlBeanDefinitionReader {
 		if (StringUtils.hasText(nameAttr)) {
 			valueHolder.setName(nameAttr);
 		}
-		bd.getConstructorArgument().addArgumetValue(valueHolder);
+		bd.getConstructorArgument().addArgumentValue(valueHolder);
 	}
 
 	/**
@@ -120,7 +122,7 @@ public class XmlBeanDefinitionReader {
 	 * @Date: 2019-03-28 17:12:41
 	 * 解析property标签
 	 */
-	private void parsePropertyElement(Element ele, BeanDefinition bd) {
+	public void parsePropertyElement(Element ele, BeanDefinition bd) {
 		Iterator<Element> iter = ele.elementIterator(PROPERTY_ATTRIBUTE);
 		while(iter.hasNext()) {
 			Element propElem = iter.next();
@@ -139,7 +141,7 @@ public class XmlBeanDefinitionReader {
 	 * @Date: 2019-03-28 17:12:58
 	 * 将property标签中的属性ref或value解析为RuntimeBeanReference或TypedStringValue,记录property的值是引用类型还是字符串类型
 	 */
-	private Object parsePropertyValue(Element ele, BeanDefinition bd, String propertyName) {
+	public Object parsePropertyValue(Element ele, BeanDefinition bd, String propertyName) {
 		String elementName = null != propertyName ? 
 				"<property> element for property " + propertyName + "'" :
 				"<constructor-arg> element";
