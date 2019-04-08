@@ -8,6 +8,11 @@ import java.util.Map;
  * this util copied from spring
  */
 public class ClassUtils {
+	/** The package separator character: '.' */
+	private static final char PACKAGE_SEPARATOR = '.';
+
+	/** The path separator character: '/' */
+	private static final char PATH_SEPARATOR = '/';
 	/**
 	 * Map with primitive wrapper type as key and corresponding primitive
 	 * type as value, for example: Integer.class -> int.class.
@@ -81,5 +86,15 @@ public class ClassUtils {
 			}
 		}
 		return false;
+	}
+
+	public static String convertClassNameToResourcePath(String className) {
+		Assert.notNull(className, "className must be not null");
+		return className.replace(PACKAGE_SEPARATOR, PATH_SEPARATOR);
+	}
+
+	public static String convertResourcePathToClassName(String resourcePath) {
+		Assert.notNull(resourcePath, "Resource path must not be null");
+		return resourcePath.replace(PATH_SEPARATOR, PACKAGE_SEPARATOR);
 	}
 }
