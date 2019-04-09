@@ -17,6 +17,7 @@ import org.litespring.beans.factory.config.RuntimeBeanReference;
 import org.litespring.beans.factory.config.TypedStringValue;
 import org.litespring.beans.factory.support.BeanDefinitionRegistry;
 import org.litespring.beans.factory.support.GenericBeanDefinition;
+import org.litespring.context.annotation.ClassPathBeanDefinitionScanner;
 import org.litespring.core.io.Resource;
 import org.litespring.util.StringUtils;
 
@@ -45,6 +46,12 @@ public class XmlBeanDefinitionReader {
 	
 	public static final String TYPE_ATTRIBUTE = "type";
 	
+	public static final String BEANS_NAMESPACE_URI = "http://www.springframework.org/schema/beans";
+	
+	public static final String CONTEXT_NAMESPACE_URI = "http://www.springframework.org/schema/context";
+	
+	public static final String BASE_PACKAGE_ATTRIBUTE = "base-package";
+	
 	private BeanDefinitionRegistry registry;
 	
 	protected Log logger = LogFactory.getLog(getClass());
@@ -70,18 +77,15 @@ public class XmlBeanDefinitionReader {
 			Element root = doc.getRootElement(); // <beans>
 			Iterator<Element> iter = root.elementIterator();
 			while(iter.hasNext()) {
-				Element ele = iter.next();
-				String id = ele.attributeValue(ID_ATTRIBUTE);
-				String beanClassName = ele.attributeValue(CLASS_ATTRIBUTE);
-				BeanDefinition bd = new GenericBeanDefinition(id, beanClassName);
-				if (null != ele.attribute(SCOPE_ATTRIBUTE)) {
-					bd.setScope(ele.attributeValue(SCOPE_ATTRIBUTE));
+				Element ele = (Element) iter.next();
+				String namespaceUri = ele.getNamespaceURI();
+				// 通过namespace来判断是xml配置还是包扫描注解
+				if (this.isDefalutNamespace(namespaceUri)) {
+					parseDefaultElement(ele);
+				} else if (this.isContextNamespace(namespaceUri)) {
+					parseComponentElement(ele);
 				}
-				// v3加入了构造器注入的解析,解析<constructor-arg>
-				parseConstructorArgElements(ele, bd);
-				// v2加入了setter注入的解析,解析<property>
-				parsePropertyElement(ele, bd);
-				this.registry.registerBeanDefinition(id, bd);
+			
 			}
 		} catch(Exception e) {
 			throw new BeanDefinitionStoreException("IOException parsing XML document from " + resource.getDescription(), e);
@@ -95,6 +99,41 @@ public class XmlBeanDefinitionReader {
 			}
 		}
 	}
+
+	/*
+	 * 处理xml配置的bean
+	 */
+	private void parseDefaultElement(Element ele) {
+		String id = ele.attributeValue(ID_ATTRIBUTE);
+		String beanClassName = ele.attributeValue(CLASS_ATTRIBUTE);
+		BeanDefinition bd = new GenericBeanDefinition(id, beanClassName);
+		if (null != ele.attribute(SCOPE_ATTRIBUTE)) {
+			bd.setScope(ele.attributeValue(SCOPE_ATTRIBUTE));
+		}
+		// v3加入了构造器注入的解析,解析<constructor-arg>
+		parseConstructorArgElements(ele, bd);
+		// v2加入了setter注入的解析,解析<property>
+		parsePropertyElement(ele, bd);
+		this.registry.registerBeanDefinition(id, bd);
+	}
+
+	/*
+	 * 处理注解配置的bean
+	 */
+	private void parseComponentElement(Element ele) {
+		String basePackages = ele.attributeValue(BASE_PACKAGE_ATTRIBUTE);
+		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(this.registry);
+		scanner.doScan(basePackages);
+	}
+	
+	private boolean isDefalutNamespace(String namespaceUri) {
+		return !StringUtils.hasLength(namespaceUri) || BEANS_NAMESPACE_URI.equals(namespaceUri);
+	}
+	
+	private boolean isContextNamespace(String namespaceUri) {
+		return !StringUtils.hasLength(namespaceUri) || CONTEXT_NAMESPACE_URI.equals(namespaceUri);
+	}
+
 	public void parseConstructorArgElements(Element beanElement, BeanDefinition bd) {
 		Iterator iter = beanElement.elementIterator(CONSTRUCTOR_ARG_ELEMENT);
 		while(iter.hasNext()) {
