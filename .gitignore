@@ -57,7 +57,7 @@ build/
 *.class
  
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.ear
  
