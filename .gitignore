@@ -57,6 +57,7 @@ build/
 *.class
  
 # Package Files #
+#*.jar
 *.war
 *.ear
  
@@ -135,4 +136,4 @@ Icon
 ## hack for graddle wrapper
 !wrapper/*.jar
 !**/wrapper/*.jar
-/litespring/
+#/litespring/
