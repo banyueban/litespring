@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.litespring.core.annotation.AnnotationAttributes;
+import org.litespring.core.type.AnnotationMetadata;
 import org.springframework.asm.AnnotationVisitor;
 import org.springframework.asm.Type;
 
@@ -13,11 +14,15 @@ import org.springframework.asm.Type;
  * @author Charis
  * 读取类上的注解
  */
-public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisitor {
+public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisitor implements AnnotationMetadata{
 
 	private final Set<String> annotationSet = new LinkedHashSet<String>(4);
 	
 	private final Map<String, AnnotationAttributes> attributeMap = new LinkedHashMap<String, AnnotationAttributes>();
+	
+	public AnnotationMetadataReadingVisitor() {
+		
+	}
 	
 	@Override
 	public AnnotationVisitor visitAnnotation(final String desc, boolean visible) {
@@ -26,14 +31,17 @@ public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisito
 		return new AnnotationAttributesReadingVisitor(className, this.attributeMap);
 	}
 
+	@Override
 	public Set<String> getAnnotationTypes() {
 		return this.annotationSet;
 	}
 	
+	@Override
 	public boolean hasAnnotation(String annotationType) {
 		return this.annotationSet.contains(annotationType);
 	}
 
+	@Override
 	public AnnotationAttributes getAnnotationAttributes(String annotationType) {
 		return this.attributeMap.get(annotationType);
 	}

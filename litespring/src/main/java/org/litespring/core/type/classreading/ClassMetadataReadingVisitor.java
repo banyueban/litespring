@@ -1,5 +1,6 @@
 package org.litespring.core.type.classreading;
 
+import org.litespring.core.type.ClassMetadata;
 import org.litespring.util.ClassUtils;
 import org.springframework.asm.ClassVisitor;
 import org.springframework.asm.Opcodes;
@@ -9,7 +10,7 @@ import org.springframework.asm.SpringAsmInfo;
  * @author Charis
  * asm框架读取字节码文件,重写ClassVisitor的visitor方法
  */
-public class ClassMetadataReadingVisitor extends ClassVisitor {
+public class ClassMetadataReadingVisitor extends ClassVisitor implements ClassMetadata {
 
 	private String className;
 	
@@ -42,14 +43,17 @@ public class ClassMetadataReadingVisitor extends ClassVisitor {
 		}
 	}
 
+	@Override
 	public boolean isAbstract() {
 		return this.isAbstract;
 	}
-
+	
+	@Override
 	public boolean isInterface() {
 		return this.isInterface;
 	}
 
+	@Override
 	public boolean isFinal() {
 		return this.isFinal;
 	}
@@ -57,21 +61,25 @@ public class ClassMetadataReadingVisitor extends ClassVisitor {
 	public boolean isConcrete() {
 		return !(this.isInterface || this.isAbstract);
 	}
+	
+	@Override
 	public String getClassName() {
 		return this.className;
 	}
 	
+	@Override
 	public boolean hasSuperClass() {
 		return this.superClassName != null;
 	}
 	
+	@Override
 	public String getSuperClassName() {
 		return this.superClassName;
 	}
 
+	@Override
 	public String[] getInterfaceNames() {
 		return this.interfaces;
 	}
-	
 	
 }

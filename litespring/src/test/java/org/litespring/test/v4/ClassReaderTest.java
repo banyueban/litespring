@@ -45,5 +45,6 @@ public class ClassReaderTest {
 		AnnotationAttributes attributes = visitor.getAnnotationAttributes(annotation);
 		
 		assertEquals("petStore", attributes.get("value"));
+		
 	}
 }
