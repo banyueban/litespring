@@ -135,5 +135,5 @@ Icon
 .Trashes
 
 ## hack for graddle wrapper
-!wrapper/*.jar
-!**/wrapper/*.jar
+#!wrapper/*.jar
+#!**/wrapper/*.jar
