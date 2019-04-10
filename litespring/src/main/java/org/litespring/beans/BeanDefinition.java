@@ -31,4 +31,10 @@ public interface BeanDefinition {
 	public ConstructorArgument getConstructorArgument();
 	
 	public boolean hasConstructorArgumentValues();
+
+	public Class<?> getBeanClass() throws IllegalStateException;
+
+	public boolean hasBeanClass();
+
+	public Class<?> resolveBeanClass(ClassLoader classLoader) throws ClassNotFoundException;
 }

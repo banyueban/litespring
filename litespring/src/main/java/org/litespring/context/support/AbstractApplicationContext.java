@@ -31,12 +31,12 @@ public abstract class AbstractApplicationContext implements ApplicationContext{
 		return this.factory.getBean(beanID);
 	}
 	
-	@Override
+//	@Override // 取消了ApplicationContext继承ConfigurableBeanFactory
 	public ClassLoader getBeanClassLoader() {
 		return null != this.beanClassLoader ? this.beanClassLoader : ClassUtils.getDefaultClassLoader();
 	}
 
-	@Override
+//	@Override // 取消了ApplicationContext继承ConfigurableBeanFactory
 	public void setBeanClassLoader(ClassLoader beanClassLoader) {
 		this.beanClassLoader = beanClassLoader;
 	}
