@@ -3,6 +3,7 @@ package org.litespring.beans.factory.support;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
 import java.util.List;
 //import java.io.IOException;
 //import java.io.InputStream;
@@ -18,6 +19,8 @@ import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
 import org.litespring.beans.SimpleTypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
+import org.litespring.beans.factory.annotation.AutowiredAnnotationProcessor;
+import org.litespring.beans.factory.config.BeanPostProcessor;
 //import org.litespring.beans.factory.BeanDefinitionStoreException;
 //import org.litespring.beans.factory.BeanFactory;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
@@ -33,6 +36,8 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 	private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
 	
 	private ClassLoader beanClassLoader;
+	
+	private List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
 	
 	/*public DefaultBeanFactory(String configFile) {
 		loadBeanDefinitions(configFile);
@@ -137,6 +142,13 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 	 * 初始化bean,实现setter注入
 	 */
 	protected void populateBean(BeanDefinition bd, Object bean) {
+		// 调用BeanPostProcessor实现bean注入
+		for (BeanPostProcessor processor : this.beanPostProcessors) {
+			if (processor instanceof AutowiredAnnotationProcessor) {
+				((AutowiredAnnotationProcessor) processor).postProcessPropertyValues(bean, bd.getID());
+			}
+		}
+		
 		List<PropertyValue> pvs = bd.getPropertyValues();
 		if (null == pvs || pvs.isEmpty()) {
 			return;
@@ -204,6 +216,16 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry implements 
 				throw new RuntimeException();
 			}
 		}
+	}
+
+	@Override
+	public void addBeanPostProcessor(BeanPostProcessor beanProcessor) {
+		this.beanPostProcessors.add(beanProcessor);
+	}
+
+	@Override
+	public List<BeanPostProcessor> getBeanPostProcessor() {
+		return this.beanPostProcessors;
 	}
 
 }

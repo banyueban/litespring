@@ -23,7 +23,7 @@ public class AutowiredAnnotationProcessorTest {
 
 		@Override
 		public Object resolveDependency(DependencyDescriptor descriptor) {
-			if (descriptor.getDependencyType().equals(AccountDao.class)) {
+			if (descriptor.getDependencyType().equals(accountDao.getClass())) {
 				return accountDao;
 			}
 			if (descriptor.getDependencyType().equals(ItemDao.class)) {

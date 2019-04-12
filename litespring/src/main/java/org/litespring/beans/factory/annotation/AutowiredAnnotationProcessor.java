@@ -9,7 +9,10 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.litespring.beans.BeansException;
+import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.AutowireCapableBeanFactory;
+import org.litespring.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.litespring.core.annotation.AnnotationUtils;
 import org.litespring.util.ReflectionUtils;
 
@@ -19,7 +22,7 @@ import org.litespring.util.ReflectionUtils;
  * @Date 2019-04-11 16:10:04
  * 处理@Autowired注解,生成InjectionMetadata,实现对依赖的注入
  */
-public class AutowiredAnnotationProcessor {
+public class AutowiredAnnotationProcessor implements InstantiationAwareBeanPostProcessor {
 	
 	private AutowireCapableBeanFactory beanFactory;
 	
@@ -62,7 +65,7 @@ public class AutowiredAnnotationProcessor {
 			}
 			
 			elements.addAll(0, currElements);
-			// TODO 处理依赖链(父类..)上的@Autowired注解???
+			// 处理依赖链(父类..)上的@Autowired注解
 			targetClass = targetClass.getSuperclass();
 		} while(targetClass != null && targetClass != Object.class);
 		
@@ -85,7 +88,7 @@ public class AutowiredAnnotationProcessor {
 	}
 
 	/*
-	 * 
+	 * 找到被目标注解标注的Field,如果该Field上不存在,则判断组合注解上是否存在
 	 */
 	private Annotation findAutowiredAnnotation(AccessibleObject ao) {
 		for(Class<? extends Annotation> type : this.autowiredAnnotationTypes) {
@@ -95,6 +98,40 @@ public class AutowiredAnnotationProcessor {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Object beforeInitialization(Object bean, String beanName) throws BeansException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object afterInitialization(Object bean, String beanName) throws BeansException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object beforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean afterInstantiation(Object bean, String beanName) throws BeansException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void postProcessPropertyValues(Object bean, String beanName) throws BeansException {
+		InjectionMetadata metadata = buildAutowiringMetadata(bean.getClass());
+		try {
+			metadata.inject(bean);
+		} catch(Throwable ex) {
+			throw new BeanCreationException(beanName, "Injection of autowired dependencies failed", ex);
+		}
 	}
 
 }
