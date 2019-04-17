@@ -7,7 +7,7 @@ import java.util.Map;
  * @author Charis
  * this util copied from spring
  */
-public class ClassUtils {
+public abstract class ClassUtils {
 	/** The package separator character: '.' */
 	private static final char PACKAGE_SEPARATOR = '.';
 
