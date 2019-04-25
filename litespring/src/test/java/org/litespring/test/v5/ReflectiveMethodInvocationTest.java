@@ -29,7 +29,7 @@ public class ReflectiveMethodInvocationTest {
 	private TransactionManager tx;
 	
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
 		petStore = new PetStoreService();
 		MessageTracker.clearMsgs();
 		beforeAdvice = new AspectJBeforeAdvice(TransactionManager.class.getMethod("start"), null, tx);
