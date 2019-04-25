@@ -84,7 +84,7 @@ public abstract class BeanUtils {
 	 */
 	public static Method findMethodWithMinimalParameters(Class<?> clazz, String methodName)
 			throws IllegalArgumentException {
-
+		// 查找public方法,包括父类和接口的方法
 		Method targetMethod = findMethodWithMinimalParameters(clazz.getMethods(), methodName);
 		if (targetMethod == null) {
 			targetMethod = findDeclaredMethodWithMinimalParameters(clazz, methodName);
@@ -106,7 +106,7 @@ public abstract class BeanUtils {
 	 */
 	public static Method findDeclaredMethodWithMinimalParameters(Class<?> clazz, String methodName)
 			throws IllegalArgumentException {
-
+		// 查找所有访问权限(public,默认,protected,private)声明的方法,包括实现的接口,但不包括父类
 		Method targetMethod = findMethodWithMinimalParameters(clazz.getDeclaredMethods(), methodName);
 		if (targetMethod == null && clazz.getSuperclass() != null) {
 			targetMethod = findDeclaredMethodWithMinimalParameters(clazz.getSuperclass(), methodName);
@@ -128,6 +128,7 @@ public abstract class BeanUtils {
 
 		Method targetMethod = null;
 		int numMethodsFoundWithCurrentMinimumArgs = 0;
+		// 找到参数数目最少且长度是唯一的一个方法
 		for (Method method : methods) {
 			if (method.getName().equals(methodName)) {
 				int numParams = method.getParameterTypes().length;
@@ -183,6 +184,7 @@ public abstract class BeanUtils {
 					"': expected opening '(' for args list");
 		}
 		else if (firstParen == -1 && lastParen == -1) {
+			// 查找参数长度最小且唯一的方法
 			return findMethodWithMinimalParameters(clazz, signature);
 		}
 		else {
