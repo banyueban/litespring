@@ -22,8 +22,9 @@ public class AspectJAfterReturningAdvice implements Advice{
 	
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		// TODO Auto-generated method stub
-		return null;
+		invocation.proceed();
+		
+		return this.adviceMethod.invoke(this.adviceObject);
 	}
 
 	@Override

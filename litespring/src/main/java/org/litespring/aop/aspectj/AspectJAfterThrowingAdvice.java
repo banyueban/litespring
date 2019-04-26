@@ -15,13 +15,19 @@ public class AspectJAfterThrowingAdvice implements Advice{
 	private Object adviceObject;
 
 	public AspectJAfterThrowingAdvice(Method adviceMethod, AspectJExpressionPointcut pointcut, Object adviceObject) {
-		// TODO Auto-generated constructor stub
+		this.adviceMethod = adviceMethod;
+		this.pointcut = pointcut;
+		this.adviceObject = adviceObject;
 	}
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return invocation.proceed();
+		} catch(Throwable t) {
+			this.adviceMethod.invoke(this.adviceObject);
+			throw t;
+		}
 	}
 
 	@Override

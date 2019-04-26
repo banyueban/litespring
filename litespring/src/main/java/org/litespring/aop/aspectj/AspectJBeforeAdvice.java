@@ -7,6 +7,7 @@ import org.litespring.aop.Advice;
 import org.litespring.aop.Pointcut;
 
 public class AspectJBeforeAdvice implements Advice{
+	
 	private Method adviceMethod;
 	
 	private AspectJExpressionPointcut pointcut;
@@ -26,8 +27,8 @@ public class AspectJBeforeAdvice implements Advice{
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		// TODO Auto-generated method stub
-		return null;
+		this.adviceMethod.invoke(this.adviceObject);
+		return invocation.proceed();
 	}
 
 
