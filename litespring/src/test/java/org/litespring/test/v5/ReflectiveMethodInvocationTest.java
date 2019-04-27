@@ -81,6 +81,7 @@ public class ReflectiveMethodInvocationTest {
 		List<MethodInterceptor> interceptors = new ArrayList<MethodInterceptor>();
 		interceptors.add(beforeAdvice);
 		interceptors.add(afterThrowingAdvice);
+		interceptors.add(afterReturningAdvice);
 		
 		ReflectiveMethodInvocation methodInvocation = new ReflectiveMethodInvocation(petStore, targetMethod, new Object[0], interceptors);
 		try {

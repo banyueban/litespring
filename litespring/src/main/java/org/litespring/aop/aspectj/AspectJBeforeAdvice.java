@@ -6,29 +6,39 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.litespring.aop.Advice;
 import org.litespring.aop.Pointcut;
 
-public class AspectJBeforeAdvice implements Advice{
+/**
+ * @author Charis
+ *	模版方法优化代码
+ */
+public class AspectJBeforeAdvice /*implements Advice*/ extends AbstractAspectJAdvice {
 	
-	private Method adviceMethod;
+	/*	
+ 	private Method adviceMethod;
 	
 	private AspectJExpressionPointcut pointcut;
 	
 	private Object adviceObject;
+	*/
 
 	public AspectJBeforeAdvice(Method adviceMethod, AspectJExpressionPointcut pointcut, Object adviceObject) {
-		this.adviceMethod = adviceMethod;
+		/*this.adviceMethod = adviceMethod;
 		this.pointcut = pointcut;
-		this.adviceObject = adviceObject;
+		this.adviceObject = adviceObject;*/
+		super(adviceMethod, pointcut, adviceObject);
 	}
 	
-	@Override
+	/*@Override
 	public Pointcut getPointcut() {
 		return this.pointcut;
-	}
+	}*/
 
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		this.adviceMethod.invoke(this.adviceObject);
-		return invocation.proceed();
+		/*this.adviceMethod.invoke(this.adviceObject);
+		return invocation.proceed();*/
+		this.invokeAdviceMethod();
+		Object o = invocation.proceed();
+		return o;
 	}
 
 
