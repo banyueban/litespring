@@ -184,7 +184,7 @@ public abstract class BeanUtils {
 					"': expected opening '(' for args list");
 		}
 		else if (firstParen == -1 && lastParen == -1) {
-			// 查找参数长度最小且唯一的方法
+			// 查找参数的长度最小且唯一的方法
 			return findMethodWithMinimalParameters(clazz, signature);
 		}
 		else {
