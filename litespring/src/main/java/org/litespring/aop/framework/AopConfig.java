@@ -18,4 +18,10 @@ public interface AopConfig {
 	List<Advice> getAdvices(Method method/*, Class<?> targetClass*/);
 	
 	Class<?> getTargetClass();
+	
+	boolean isProxyTargetClass();
+	
+	Class<?>[] getProxiedInterfaces();
+	
+	boolean isInterfaceProxied(Class<?> intf);
 }
